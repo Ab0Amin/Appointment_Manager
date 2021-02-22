@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Appointment Manager</string>
+    <string name="calender_mode">Calender Mode</string>
+</resources>
