@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
     List<Appointment> appointments;
     TimelineView timeline;
     RecyclerView appointmentsRecyclerView;
-    CustomAdapter customAdapter;
-    RecyclerView.LayoutManager layoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,29 +56,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new AppointmentsAdapter(this,appointments);
         appointments_lv.setAdapter(adapter);
 
-
-        // Recycler View
-        /*
-        layoutManager = new LinearLayoutManager(this);
-        appointmentsRecyclerView.setLayoutManager(layoutManager);
-        customAdapter = new CustomAdapter(appointments);
-        appointmentsRecyclerView.setAdapter(customAdapter);
-
-         */
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
