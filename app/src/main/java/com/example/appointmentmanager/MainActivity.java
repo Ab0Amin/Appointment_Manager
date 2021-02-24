@@ -5,15 +5,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +34,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
+public class MainActivity extends AppCompatActivity {
     ConstraintLayout parentLayout;
     MaterialCalendarView calendar;
     ListView appointments_lv;
@@ -49,27 +52,23 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         calendar = findViewById(R.id.calendarView);
         appointments_lv = findViewById(R.id.appointments_lv);
 
+        //make calendar dynamic height
+        calendar.setDynamicHeightEnabled(true);
 
         //setting ArrayAdapter list view
         appointments =  AppointmentManagerDatabase.getInstance(this).appointmentDAO().allAppointments();
         adapter = new AppointmentsAdapter(this,appointments);
         appointments_lv.setAdapter(adapter);
 
+
+
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        byte action = (byte) motionEvent.getAction();
+    public void moveToAddAppointment(View view) {
 
-        if(action ==  MotionEvent.ACTION_DOWN)
-        {
-            calendar.state().edit().setCalendarDisplayMode(CalendarMode.MONTHS).commit();
-        }
-        else if(action ==  MotionEvent.ACTION_UP)
-        {
-            calendar.state().edit().setCalendarDisplayMode(CalendarMode.WEEKS).commit();
-        }
-        return true;
+        Intent intent = new Intent(this,Add_appointment.class); // move to add page
+        intent.putExtra("selectedDate",calendar.getSelectedDate()); // passing calendar selected date
+        startActivity(intent); // start activity
     }
 
 
@@ -162,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
     public void calendarMode(View view) {
-        view.setOnTouchListener(this);
+
         // to animate ConstraintLayout
         TransitionManager.beginDelayedTransition(parentLayout);
 
