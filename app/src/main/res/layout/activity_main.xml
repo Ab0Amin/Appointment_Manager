@@ -13,16 +13,18 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/layout_bg"
+        android:addStatesFromChildren="false"
 
-        android:backgroundTint="#888787"
+        android:alwaysDrawnWithCache="false"
+        android:background="@drawable/layout_bg"
         android:splitMotionEvents="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:mcv_calendarMode="week"
-        app:mcv_selectionColor="#221F1F" />
+        app:mcv_dateTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:mcv_firstDayOfWeek="saturday"
+        app:mcv_selectionColor="@color/secondaryColor" />
 
     <Switch
         android:id="@+id/switch1"

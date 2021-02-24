@@ -10,4 +10,5 @@ public interface AppointmentDAO {
     @Query("SELECT * FROM appointments")
     List<Appointment> allAppointments();
 
+    //im here
 }

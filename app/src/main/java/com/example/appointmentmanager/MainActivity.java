@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -30,25 +31,23 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
     ConstraintLayout parentLayout;
     MaterialCalendarView calendar;
     ListView appointments_lv;
     AppointmentsAdapter adapter;
     List<Appointment> appointments;
-    TimelineView timeline;
-    RecyclerView appointmentsRecyclerView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         //views
         parentLayout = findViewById(R.id.parent);
         calendar = findViewById(R.id.calendarView);
         appointments_lv = findViewById(R.id.appointments_lv);
-        appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
 
 
         //setting ArrayAdapter list view
@@ -58,9 +57,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        byte action = (byte) motionEvent.getAction();
 
-
-
+        if(action ==  MotionEvent.ACTION_DOWN)
+        {
+            calendar.state().edit().setCalendarDisplayMode(CalendarMode.MONTHS).commit();
+        }
+        else if(action ==  MotionEvent.ACTION_UP)
+        {
+            calendar.state().edit().setCalendarDisplayMode(CalendarMode.WEEKS).commit();
+        }
+        return true;
+    }
 
 
     class AppointmentsAdapter extends ArrayAdapter<Appointment> implements View.OnClickListener {
@@ -152,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void calendarMode(View view) {
-
+        view.setOnTouchListener(this);
         // to animate ConstraintLayout
         TransitionManager.beginDelayedTransition(parentLayout);
 
