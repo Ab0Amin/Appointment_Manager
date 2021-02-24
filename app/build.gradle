@@ -41,7 +41,7 @@ dependencies {
 
     implementation 'com.github.vipulasri:timelineview:1.1.5'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
-
+    implementation "com.jakewharton.threetenabp:threetenabp:1.2.1"
 
     def room_version = "2.2.6"
 
