@@ -1,7 +1,11 @@
 package com.example.appointmentmanager;
 
+import android.icu.util.LocaleData;
+
 import androidx.room.Dao;
 import androidx.room.Query;
+
+import org.threeten.bp.LocalDate;
 
 import java.util.List;
 
@@ -10,5 +14,7 @@ public interface AppointmentDAO {
     @Query("SELECT * FROM appointments")
     List<Appointment> allAppointments();
 
-    //im here
+    @Query("SELECT * FROM appointments WHERE date_time > :day  and (SELECT  date_time < date(:day,'+1 day')) ORDER BY  date_time")
+    List<Appointment> selectedDayAppointments(String day);
+
 }

@@ -2,36 +2,35 @@ package com.example.appointmentmanager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GestureDetectorCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.icu.util.LocaleData;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.TransitionManager;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.threeten.bp.LocalDate;
+
+import java.util.Calendar;
 
 import com.github.vipulasri.timelineview.TimelineView;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,23 +42,29 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
         //views
         parentLayout = findViewById(R.id.parent);
         calendar = findViewById(R.id.calendarView);
         appointments_lv = findViewById(R.id.appointments_lv);
 
-        //make calendar dynamic height
+
+
+        //set calendar view setting
+        final LocalDate today = LocalDate.now();
+        calendar.setSelectedDate(today);
         calendar.setDynamicHeightEnabled(true);
 
         //setting ArrayAdapter list view
-        appointments =  AppointmentManagerDatabase.getInstance(this).appointmentDAO().allAppointments();
+        appointments =  AppointmentManagerDatabase.getInstance(this).appointmentDAO().selectedDayAppointments(today.toString());
         adapter = new AppointmentsAdapter(this,appointments);
         appointments_lv.setAdapter(adapter);
-
 
 
     }
