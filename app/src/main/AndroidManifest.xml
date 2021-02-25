@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppointmentManager">
-        <activity android:name=".AddAppointment"></activity>
+        <activity android:name=".AddAppointment"   android:screenOrientation="portrait">
+
+        </activity>
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
