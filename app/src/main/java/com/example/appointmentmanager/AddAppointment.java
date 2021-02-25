@@ -13,9 +13,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -57,13 +59,13 @@ public class AddAppointment extends AppCompatActivity {
     MaterialTimePicker picker;
     FragmentManager fragmentManager;
     DateFormat dateFormat;
+    AlertDialog.Builder dlgAlert;
+    Thread TimePickerThead;
 
     //variables
     int year;
     int month;
     int day;
-    long milliTime;
-
     String dateString;
 
     //datastructure
@@ -87,6 +89,7 @@ public class AddAppointment extends AppCompatActivity {
         calendar = Calendar.getInstance();
         dateFormat = new DateFormat();
         AllSelecteDates = new ArrayList<>();
+         dlgAlert  = new AlertDialog.Builder(this);
 
         //events
         year = calendar.get(Calendar.YEAR);
@@ -119,15 +122,17 @@ public class AddAppointment extends AppCompatActivity {
 
     //methods
     public void insert(View view) {
-        if (AllSelecteDates.size()>0&&color.getText().toString()!=null&&title.getText().toString()!=null) {
+        if (AllSelecteDates.size()>0&&!color.getText().toString().isEmpty()&&!title.getText().toString().isEmpty()&&!time.getText().toString().isEmpty()) {
             for (int i = 0; i < AllSelecteDates.size(); i++) {
-
+                String c = title.getText().toString();
+                String c1 = time.getText().toString();
+                String c2 = color.getText().toString();
                 newAppointment.color = color.getText().toString();
                 newAppointment.note = note.getText().toString();
                 newAppointment.title = title.getText().toString();
                 newAppointment.date_time = AllSelecteDates.get(i) +" "+ time.getText().toString();
                 AppointmentManagerDatabase.getInstance(this).appointmentDAO2().insertAppointment(newAppointment);
-
+                Toast.makeText(this, "Appointment Saved", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -140,32 +145,31 @@ public class AddAppointment extends AppCompatActivity {
 
     public void timrDialog(View view) {
 //        timePicker.show();
-
-        picker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_12H)
-                .setHour(12)
-                .setMinute(0)
-                .setTitleText("Select Appointment time")
-                .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)
-                .build();
-        picker.show(fragmentManager, "tag");
-        picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+        TimePickerThead = new Thread(new Runnable() {
             @Override
-            public void onClick(View v) {
+            public void run() {
+                picker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).setHour(12).setMinute(0).setTitleText("Select Appointment time").setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD).build();
+                picker.show(fragmentManager, "tag");
+                picker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
 
 //               calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, picker.getHour());
-                calendar.set(Calendar.MINUTE, picker.getMinute());
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                Date selectedTime = calendar.getTime();
+                        calendar.set(Calendar.HOUR_OF_DAY, picker.getHour());
+                        calendar.set(Calendar.MINUTE, picker.getMinute());
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
+                        Date selectedTime = calendar.getTime();
+                        dateString = dateFormat.format("hh.mm aa", selectedTime).toString();
+                        time.setText(dateString);
+                    }
+                });
 
-                dateString = dateFormat.format("hh.mm aa", selectedTime).toString();
-                time.setText(dateString);
 
             }
         });
+        TimePickerThead.start();
 
 
     }
@@ -175,6 +179,25 @@ public class AddAppointment extends AppCompatActivity {
     }
 
     public void back(View view) {
-        onBackPressed();
+        dlgAlert.setMessage("ARE YOU SURE TO DISCARD THIS APPOINTMENT");
+        dlgAlert.setTitle("DISCARD");
+//        dlgAlert.setPositiveButton("OK", null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dismiss the dialog
+                        onBackPressed();
+                    }
+                });
+        dlgAlert.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dlgAlert.create().show();
+
+       //
     }
 }
