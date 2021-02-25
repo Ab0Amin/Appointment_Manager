@@ -4,6 +4,133 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Add_appointment">
+    android:background="#FDFCFC"
+    tools:context=".AddAppointment">
+
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="75dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/round_button"
+        android:gravity="center_vertical|center_horizontal"
+        android:onClick="insert"
+        android:singleLine="true"
+        android:text="Save"
+        android:textColor="#0553CD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rippleColor="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/tx_title"
+        android:layout_width="176dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="title"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/tx_notes"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/tx_notes"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="note"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/tx_color"
+        android:layout_width="132dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="color"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/tx_notes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tx_title" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="timrDialog"
+        android:text="time"
+        android:textColor="#FAF8F8"
+        app:layout_constraintBottom_toTopOf="@+id/TX_dateFromButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/TX_dateFromButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Time of Appointment"
+        app:layout_constraintBottom_toTopOf="@+id/tx_title"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tx_time"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:hint="Selected Dates"
+        app:layout_constraintBottom_toTopOf="@+id/tx_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Cl_calender" />
+
+    <CalendarView
+
+        android:id="@+id/Cl_calender"
+        android:layout_width="389dp"
+        android:layout_height="304dp"
+        android:layout_marginTop="5dp"
+        android:selectedWeekBackgroundColor="#CC1F1F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        app:mcv_selectionMode="multiple"
+        app:mcv_showOtherDates="decorated_disabled" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:onClick="clearSelectedDates"
+        app:layout_constraintBottom_toBottomOf="@+id/tx_time"
+        app:layout_constraintEnd_toStartOf="@+id/tx_time"
+        app:srcCompat="@drawable/reset2" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="45dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="8dp"
+        android:clickable="true"
+        android:onClick="back"
+        app:tint="#0553CD"
+        app:layout_constraintBottom_toTopOf="@+id/Cl_calender"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/mcv_action_previous" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

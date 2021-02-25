@@ -10,6 +10,7 @@ import androidx.room.RoomDatabase;
 public abstract class AppointmentManagerDatabase extends RoomDatabase {
     // entities DAO
     public abstract AppointmentDAO appointmentDAO();
+    public abstract AppointmentDAO2 appointmentDAO2();
 
 
     private  static AppointmentManagerDatabase ourInterface;

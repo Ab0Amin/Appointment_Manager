@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void moveToAddAppointment(View view) {
 
-        Intent intent = new Intent(this,Add_appointment.class); // move to add page
+        Intent intent = new Intent(this,AddAppointment.class); // move to add page
         intent.putExtra("selectedDate",calendar.getSelectedDate()); // passing calendar selected date
         startActivity(intent); // start activity
     }
