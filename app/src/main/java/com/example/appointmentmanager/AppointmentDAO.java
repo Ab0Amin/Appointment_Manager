@@ -25,4 +25,8 @@ public interface AppointmentDAO {
     @Query("SELECT DISTINCT date(date_time) FROM appointments WHERE date_time > :day  and (SELECT  date_time < date(:day,'+1 month'))")
     List<String> daysHasAppointments(String day);
 
+    @Query("UPDATE appointments SET note = :note WHERE id = :id")
+    void updateAppointment(int id, String note);
+
+
 }

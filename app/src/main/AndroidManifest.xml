@@ -10,10 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppointmentManager"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".AppointmentPage"></activity>
+        <activity android:name=".SettingsActivity" />
         <activity
             android:name=".AddAppointment"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

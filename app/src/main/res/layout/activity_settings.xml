@@ -6,50 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+    <TextView
+        android:id="@+id/pageTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/calendarColor"
+        android:background="@drawable/layout_bg"
+        android:paddingTop="50sp"
+        android:paddingBottom="20sp"
+        android:text="My Settings"
+        android:textAlignment="center"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/pageTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="My Settings"
-            android:textColor="@color/primaryTextColor"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/backupSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:text="Allow Auto weekly backup"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/pageTitleTextView" />
 
     <Switch
-        android:id="@+id/switch2"
+        android:id="@+id/notificationsSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Turn off notifications"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/switch1"
-        app:layout_constraintTop_toBottomOf="@+id/switch1" />
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/backupSwitch"
+        app:layout_constraintTop_toBottomOf="@+id/backupSwitch" />
 </androidx.constraintlayout.widget.ConstraintLayout>

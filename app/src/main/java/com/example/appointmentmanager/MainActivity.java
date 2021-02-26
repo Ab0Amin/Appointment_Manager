@@ -127,6 +127,12 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getAppointments(calendar.getSelectedDate()); //update the appointments
+    }
+
     public void moveToAddAppointment(View view) {
 
         Intent intent = new Intent(this,AddAppointment.class); // move to add page
@@ -148,8 +154,12 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         selectedDayInWeekTextView.setText(calendar.getSelectedDate().getDate().getDayOfWeek().toString()); //week day
 
 
+        getAppointments(date);
 
 
+    }
+
+    private void getAppointments(@NonNull CalendarDay date) {
         pool.execute(new Runnable() {
             @Override
             public void run() {
@@ -188,8 +198,6 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
                 previousDaySelected = calendar.getSelectedDate(); // set previousDaySelected reference
             }
         });
-
-
     }
 
     @Override
@@ -279,8 +287,8 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
             holder.titleTextView.setText(getItem(position).title);
             holder.timeTextView.setText(getItem(position).date_time.substring(11));
             holder.beltColorImageView.setColorFilter(getColor(getItem(position).color));
-
-
+            holder.constraintLayout.setOnClickListener(this);
+            holder.constraintLayout.setTag(getItem(position));
             return  convertView;
         }
 
@@ -309,7 +317,16 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
 
         @Override
         public void onClick(View view) {
-            //TODO
+            Appointment a = (Appointment) view.getTag();
+
+            Intent intent = new Intent(MainActivity.this,AppointmentPage.class); // move to add page
+            intent.putExtra("title",a.title);
+            intent.putExtra("note",a.note);
+            intent.putExtra("color",getColor(a.color));
+            intent.putExtra("date",a.date_time);
+            intent.putExtra("id",a.id);
+            startActivity(intent); // start activity
+
         }
     }
     static class viewHolder {
