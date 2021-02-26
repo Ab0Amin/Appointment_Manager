@@ -1,5 +1,5 @@
 <resources>
 
     <string name="app_name">Appointment Manager</string>
-    <string name="calender_mode">Calender Mode</string>
+    <string name="Month_mode">Month Mode</string>
 </resources>

@@ -8,13 +8,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppointmentManager">
-        <activity android:name=".AddAppointment"   android:screenOrientation="portrait">
-
-        </activity>
-
-
-        <activity android:name=".MainActivity"  android:screenOrientation="portrait">
+        android:theme="@style/Theme.AppointmentManager"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".SettingsActivity"></activity>
+        <activity
+            android:name=".AddAppointment"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

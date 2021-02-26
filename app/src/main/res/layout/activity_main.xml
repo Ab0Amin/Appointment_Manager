@@ -9,7 +9,7 @@
     tools:ignore="UseSwitchCompatOrMaterialXml">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
+        android:id="@+id/addAppointmentFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
@@ -40,11 +40,10 @@
         tools:ignore="MissingConstraints" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/modeSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="calendarMode"
-        android:text="@string/calender_mode"
+        android:text="@string/Month_mode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calendarView" />
@@ -59,7 +58,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/selectedDayInWeekTextView"
         app:layout_constraintStart_toStartOf="@+id/selectedDayInWeekTextView"
-        app:layout_constraintTop_toBottomOf="@+id/switch1"
+        app:layout_constraintTop_toBottomOf="@+id/modeSwitch"
         tools:text="9" />
 
     <TextView
@@ -120,6 +119,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:onClick="moveToSettingsImageView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -127,17 +128,18 @@
             app:tint="@color/primaryTextColor" />
 
         <TextView
-            android:id="@+id/selectedMonthTextView"
+            android:id="@+id/pageTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
+            android:text="My Appointments"
             android:textColor="@color/primaryTextColor"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="October" />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

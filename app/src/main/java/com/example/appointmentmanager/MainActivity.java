@@ -2,20 +2,15 @@ package com.example.appointmentmanager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GestureDetectorCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.icu.util.LocaleData;
-import android.os.Build;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.GestureDetector;
@@ -23,19 +18,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.threeten.bp.LocalDate;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import com.example.appointmentmanager.decorator.DayHasAppointmentsDecorator;
 import com.example.appointmentmanager.decorator.TodayDecorator;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -44,18 +40,27 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity implements OnDateSelectedListener, OnMonthChangedListener, View.OnTouchListener,GestureDetector.OnGestureListener {
+public class MainActivity extends AppCompatActivity implements OnDateSelectedListener, OnMonthChangedListener, CompoundButton.OnCheckedChangeListener {
+    int processors = Runtime.getRuntime().availableProcessors();
+    ExecutorService pool = Executors.newFixedThreadPool(processors);
+
     ConstraintLayout parentLayout;
     MaterialCalendarView calendar;
+    CalendarDay previousDaySelected;
+    Switch modeSwitch;
     ListView appointments_lv;
     AppointmentsAdapter adapter;
     List<Appointment> appointments;
     ArrayList<CalendarDay> HasAppointments = new ArrayList<>();
     AppointmentDAO appointmentDAO;
     DayHasAppointmentsDecorator DHAdecorator;
-    TextView selectedDayNumTextView,selectedDayInWeekTextView,selectedMonthTextView,selectedCountTextView;
-    private GestureDetector mGestureDetector;
+
+    TextView selectedDayNumTextView,selectedDayInWeekTextView,selectedCountTextView;
+
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -70,14 +75,17 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         appointments_lv = findViewById(R.id.appointments_lv);
         selectedDayNumTextView = findViewById(R.id.selectedDayNumTextView);
         selectedDayInWeekTextView = findViewById(R.id.selectedDayInWeekTextView);
-        selectedMonthTextView = findViewById(R.id.selectedMonthTextView);
         selectedCountTextView = findViewById(R.id.selectedCountTextView);
+        modeSwitch = findViewById(R.id.modeSwitch);
+        modeSwitch.setOnCheckedChangeListener(this);
 
 
         //set calendar view setting
+
         //get all day in the current month has appointments
         LocalDate monthFirstDay = LocalDate.now().withDayOfMonth(1);
         calendar.setSelectedDate(monthFirstDay);
+
         getDaysHasAppointments(calendar.getSelectedDate());
         monthFirstDay = null;
 
@@ -88,23 +96,34 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         calendar.setDynamicHeightEnabled(true); // make calender Height Dynamic depend on days number
         calendar.setOnDateChangedListener(this);
         calendar.setOnMonthChangedListener(this);
-        calendar.setTopbarVisible(false);
+        calendar.setLeftArrow(0);
+        calendar.setRightArrow(0);
+
+        //calendar.setTopbarVisible(false);
 
         //new string here
         selectedDayNumTextView.setText(""+today.getDayOfMonth());
         selectedDayInWeekTextView.setText(calendar.getSelectedDate().getDate().getDayOfWeek().toString());
-        selectedMonthTextView.setText(calendar.getSelectedDate().getDate().getMonth().toString());
 
 
         //setting ArrayAdapter list view
-        appointments = appointmentDAO.selectedDayAppointments(today.toString());
-        selectedCountTextView.setText(appointments.size() + " Appointments due");
-        if (appointments.size() != 0)
-        {
-            adapter = new AppointmentsAdapter(this,appointments);
-            appointments_lv.setAdapter(adapter);
+        pool.execute(() -> {
+            appointments = appointmentDAO.selectedDayAppointments(today.toString()); //TODO it may take time
+            selectedCountTextView.setText(appointments.size() + " Appointments due");
+            if (appointments.size() != 0)
+            {
+                adapter = new AppointmentsAdapter(MainActivity.this,appointments);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        appointments_lv.setAdapter(adapter);
+                    }
+                });
 
-        }
+
+            }
+        });
+        previousDaySelected = calendar.getSelectedDate();
 
     }
 
@@ -119,96 +138,121 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
     @SuppressLint("SetTextI18n")
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-        selectedDayNumTextView.setText(""+date.getDate().getDayOfMonth());
 
-        selectedDayInWeekTextView.setText(calendar.getSelectedDate().getDate().getDayOfWeek().toString());
-        if(adapter == null)
-        {
-            appointments = null;
-            appointments = appointmentDAO.selectedDayAppointments(date.getDate().toString());
+        //don't do any thing if same day has selected
+        if(date == previousDaySelected)
+            return;
 
-            if(appointments.size() == 0)
-            {
-                return;
+        //setting date on the top left of list view
+        selectedDayNumTextView.setText(""+date.getDate().getDayOfMonth()); //month day
+        selectedDayInWeekTextView.setText(calendar.getSelectedDate().getDate().getDayOfWeek().toString()); //week day
+
+
+
+
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                if(adapter == null)
+                {
+                    appointments = appointmentDAO.selectedDayAppointments(date.getDate().toString()); //TODO it may take time
+
+                    if(appointments.size() == 0)
+                    {
+                        appointments = null;
+                        return;
+                    }
+                    adapter = new AppointmentsAdapter(MainActivity.this,appointments);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            appointments_lv.setAdapter(adapter);
+                        }
+                    });
+
+                }
+
+                //get date Appointments from database
+                appointments.clear(); // clear appointments array
+                appointments.addAll(appointmentDAO.selectedDayAppointments(date.getDate().toString())); //TODO it may take time
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                        selectedCountTextView.setText(appointments.size() + " Appointments due");
+                    }
+                });
+
+
+                previousDaySelected = calendar.getSelectedDate(); // set previousDaySelected reference
             }
-            adapter = new AppointmentsAdapter(this,appointments);
-            appointments_lv.setAdapter(adapter);
-        }
-        //get date Appointments from database
-        appointments.clear(); // clear appointments array
-        appointments.addAll(appointmentDAO.selectedDayAppointments(date.getDate().toString()));
-        adapter.notifyDataSetChanged();
-        selectedCountTextView.setText(appointments.size() + " Appointments due");
+        });
+
+
     }
 
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        // set a green dot at the bottom of each day has an appointment
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                getDaysHasAppointments(date);
+            }
+        });
 
-        selectedMonthTextView.setText(calendar.getSelectedDate().getDate().getMonth().toString());
-        getDaysHasAppointments(date);
     }
 
     private void getDaysHasAppointments(CalendarDay date) {
+
+        // clean  decorator object and clear screen
         if(DHAdecorator != null)
         {
-            calendar.removeDecorator(DHAdecorator);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    calendar.removeDecorator(DHAdecorator);
+                }
+            });
+
             DHAdecorator = null;
         }
-        List<String> dates = appointmentDAO.daysHasAppointments(date.getDate().toString());
+        // get the selected moth days  that has Appointments -> Sting list
+        List<String> dates = appointmentDAO.daysHasAppointments(date.getDate().toString());//TODO it may take time
 
+        // convert  String dates to ArrayList of CalendarDay
         for (String sDate : dates) {
             HasAppointments.add(CalendarDay.from(LocalDate.parse(sDate)));
         }
-
+        // decorate days has appointment in this moth
         DHAdecorator = new DayHasAppointmentsDecorator(Color.GREEN, HasAppointments);
-        calendar.addDecorator(DHAdecorator);
-        HasAppointments.clear();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                calendar.addDecorator(DHAdecorator);
+            }
+        });
+
+        HasAppointments.clear(); // clear array to reuse it
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        mGestureDetector.onTouchEvent(motionEvent);
-        Toast.makeText(this, ""+view.getId() , Toast.LENGTH_SHORT).show();
-        return true;
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+        // to animate ConstraintLayout
+        TransitionManager.beginDelayedTransition(parentLayout);
+
+        // change CalendarMode depends on the current mode
+        if(calendar.getCalendarMode() == CalendarMode.WEEKS)
+            calendar.state().edit().setCalendarDisplayMode(CalendarMode.MONTHS).commit();
+        else
+            calendar.state().edit().setCalendarDisplayMode(CalendarMode.WEEKS).commit();
     }
 
-    @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent motionEvent) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
-
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
-
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
-
-        return false;
+    public void moveToSettingsImageView(View view) {
+        Intent intent = new Intent(this,SettingsActivity.class); // move to add page
+        startActivity(intent); // start activity
     }
 
 
@@ -265,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
 
         @Override
         public void onClick(View view) {
-
+            //TODO
         }
     }
     static class viewHolder {
@@ -292,16 +336,6 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
 
         }
     }
-    public void calendarMode(View view) {
 
-        // to animate ConstraintLayout
-        TransitionManager.beginDelayedTransition(parentLayout);
-
-        // change CalendarMode depends on the current mode
-        if(calendar.getCalendarMode() == CalendarMode.WEEKS)
-            calendar.state().edit().setCalendarDisplayMode(CalendarMode.MONTHS).commit();
-        else
-            calendar.state().edit().setCalendarDisplayMode(CalendarMode.WEEKS).commit();
-    }
 
 }
