@@ -6,6 +6,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,6 +18,8 @@ import android.icu.util.LocaleData;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -32,11 +36,8 @@ import java.util.Calendar;
 
 import com.example.appointmentmanager.decorator.DayHasAppointmentsDecorator;
 import com.example.appointmentmanager.decorator.TodayDecorator;
-import com.github.vipulasri.timelineview.TimelineView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
@@ -44,7 +45,7 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnDateSelectedListener, OnMonthChangedListener {
+public class MainActivity extends AppCompatActivity implements OnDateSelectedListener, OnMonthChangedListener, View.OnTouchListener,GestureDetector.OnGestureListener {
     ConstraintLayout parentLayout;
     MaterialCalendarView calendar;
     ListView appointments_lv;
@@ -53,8 +54,10 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
     ArrayList<CalendarDay> HasAppointments = new ArrayList<>();
     AppointmentDAO appointmentDAO;
     DayHasAppointmentsDecorator DHAdecorator;
+    TextView selectedDayNumTextView,selectedDayInWeekTextView,selectedMonthTextView,selectedCountTextView;
+    private GestureDetector mGestureDetector;
 
-
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         parentLayout = findViewById(R.id.parent);
         calendar = findViewById(R.id.calendarView);
         appointments_lv = findViewById(R.id.appointments_lv);
+        selectedDayNumTextView = findViewById(R.id.selectedDayNumTextView);
+        selectedDayInWeekTextView = findViewById(R.id.selectedDayInWeekTextView);
+        selectedMonthTextView = findViewById(R.id.selectedMonthTextView);
+        selectedCountTextView = findViewById(R.id.selectedCountTextView);
 
 
         //set calendar view setting
@@ -81,18 +88,23 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         calendar.setDynamicHeightEnabled(true); // make calender Height Dynamic depend on days number
         calendar.setOnDateChangedListener(this);
         calendar.setOnMonthChangedListener(this);
+        calendar.setTopbarVisible(false);
+
+        //new string here
+        selectedDayNumTextView.setText(""+today.getDayOfMonth());
+        selectedDayInWeekTextView.setText(calendar.getSelectedDate().getDate().getDayOfWeek().toString());
+        selectedMonthTextView.setText(calendar.getSelectedDate().getDate().getMonth().toString());
 
 
         //setting ArrayAdapter list view
         appointments = appointmentDAO.selectedDayAppointments(today.toString());
-
+        selectedCountTextView.setText(appointments.size() + " Appointments due");
         if (appointments.size() != 0)
         {
             adapter = new AppointmentsAdapter(this,appointments);
             appointments_lv.setAdapter(adapter);
 
         }
-
 
     }
 
@@ -104,8 +116,12 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        selectedDayNumTextView.setText(""+date.getDate().getDayOfMonth());
+
+        selectedDayInWeekTextView.setText(calendar.getSelectedDate().getDate().getDayOfWeek().toString());
         if(adapter == null)
         {
             appointments = null;
@@ -122,16 +138,14 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         appointments.clear(); // clear appointments array
         appointments.addAll(appointmentDAO.selectedDayAppointments(date.getDate().toString()));
         adapter.notifyDataSetChanged();
-
+        selectedCountTextView.setText(appointments.size() + " Appointments due");
     }
 
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
 
-
+        selectedMonthTextView.setText(calendar.getSelectedDate().getDate().getMonth().toString());
         getDaysHasAppointments(date);
-
-        Toast.makeText(this, ""+date.getDate(), Toast.LENGTH_SHORT).show();
     }
 
     private void getDaysHasAppointments(CalendarDay date) {
@@ -150,6 +164,53 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         calendar.addDecorator(DHAdecorator);
         HasAppointments.clear();
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        mGestureDetector.onTouchEvent(motionEvent);
+        Toast.makeText(this, ""+view.getId() , Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+
+        return false;
+    }
+
 
     class AppointmentsAdapter extends ArrayAdapter<Appointment> implements View.OnClickListener {
         public AppointmentsAdapter(@NonNull Context context,List<Appointment> appointment ) { super(context, 0,appointment); }
@@ -173,38 +234,33 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
 
             holder.titleTextView.setText(getItem(position).title);
             holder.timeTextView.setText(getItem(position).date_time.substring(11));
-            holder.beltColorImageView.setImageResource(getImgID(getItem(position).color));
-
-
+            holder.beltColorImageView.setColorFilter(getColor(getItem(position).color));
 
 
             return  convertView;
         }
 
 
-        int getImgID(String color)
+        int getColor(String color)
         {
             /*
-            getting image id from drawable
+            getting color id from drawable
              */
-
-
             if(color.equals("black"))
-                return R.drawable.ic_black;
+                return Color.BLACK;
 
             if(color.equals("blue"))
-                return R.drawable.ic_blue;
+                return Color.BLUE;
 
             if(color.equals("red"))
-                return R.drawable.ic_red;
+                return Color.RED;
 
             if(color.equals("yellow"))
-                return R.drawable.ic_yellow;
+                return Color.YELLOW;
 
-            if(color.equals("white"))
-                return R.drawable.ic_white;
 
-            return R.drawable.ic_belt;
+        return Color.WHITE;
+
         }
 
         @Override
@@ -215,25 +271,22 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
     static class viewHolder {
         TextView timeTextView,titleTextView;
         ImageView beltColorImageView;
-        TimelineView timelineView;
+        ConstraintLayout constraintLayout;
+        //TimelineView timelineView;
         public  viewHolder (View convertView)
         {
             //to stop sound and effect
             convertView.setOnClickListener(null);
             convertView.setSoundEffectsEnabled(false);
-            //style sibarator
+
             //set views id
             timeTextView = convertView.findViewById(R.id.timeTextView);
             titleTextView = convertView.findViewById(R.id.titleTextView);
-            timelineView = convertView.findViewById(R.id.timelineView);
             beltColorImageView = convertView.findViewById(R.id.beltColorImageView);
+            constraintLayout = convertView.findViewById(R.id.constraintLayout); //TODO onclick
 
 
 
-            //time line setting
-            timelineView.setMarkerColor(Color.GRAY);
-            timelineView.setStartLineColor(Color.GRAY,0);
-            timelineView.setEndLineColor(Color.GRAY,0);
 
 
 

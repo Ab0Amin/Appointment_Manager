@@ -1,7 +1,15 @@
 <!--?xml version="1.0" encoding="UTF-8"?-->
 <resources>
 
+  // appointments color
+  <color name="appointmentColor1">#005249</color>
+  <color name="appointmentColor2">#de5285</color>
+  <color name="appointmentColor3">#a57c00</color>
 
+
+
+  <color name="noteColor">#99B9B6</color>
+  <color name="timeColor">#626466</color>
   <color name="calendarColor">#2E2F33</color>
   <color name="primaryColor">#1f2225</color>
   <color name="primaryLightColor">#46494d</color>
