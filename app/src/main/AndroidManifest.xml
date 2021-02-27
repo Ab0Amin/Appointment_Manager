@@ -15,9 +15,17 @@
         <activity
             android:name=".AddAppointment"
             android:screenOrientation="portrait" />
+
+        <receiver
+            android:name=".decorator.MyReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
+
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppointmentManager">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

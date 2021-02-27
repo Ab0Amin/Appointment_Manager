@@ -10,42 +10,28 @@
     <EditText
         android:id="@+id/tx_title"
         android:layout_width="176dp"
-        android:layout_height="51dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="123dp"
         android:ems="10"
         android:hint="title"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/tx_notes"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/tx_notes"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_width="394dp"
+        android:layout_height="67dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="40dp"
         android:ems="10"
         android:hint="note"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/tx_color"
-        android:layout_width="132dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:hint="color"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/tx_notes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tx_title" />
 
     <Button
         android:id="@+id/button"
@@ -69,46 +55,30 @@
         app:layout_constraintBottom_toTopOf="@+id/tx_title"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/tx_time"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:hint="Selected Dates"
-        app:layout_constraintBottom_toTopOf="@+id/tx_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Cl_calender" />
-
-    <CalendarView
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
 
         android:id="@+id/Cl_calender"
-        android:layout_width="389dp"
+        android:layout_width="0dp"
         android:layout_height="304dp"
         android:layout_marginTop="16dp"
-        android:selectedWeekBackgroundColor="#CC1F1F"
+        android:backgroundTintMode="add"
+        android:clipChildren="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:mcv_selectionMode="multiple"
-        app:mcv_showOtherDates="decorated_disabled" />
+        app:mcv_arrowColor="@color/primaryTextColor"
+        app:mcv_calendarMode="month"
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:onClick="clearSelectedDates"
-        app:layout_constraintBottom_toBottomOf="@+id/tx_time"
-        app:layout_constraintEnd_toStartOf="@+id/tx_time"
-        app:srcCompat="@drawable/reset2" />
+        app:mcv_dateTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:mcv_selectionMode="multiple"
+        app:mcv_weekDayTextAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="45dp"
         android:layout_height="49dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:clickable="true"
         android:onClick="back"
         app:layout_constraintBottom_toTopOf="@+id/Cl_calender"
@@ -121,7 +91,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="26dp"
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical|center_horizontal"
         android:onClick="insert"
@@ -132,6 +102,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginBottom="11dp"
+        android:onClick="test"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner_colors"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:entries="@array/Colors"
+        app:layout_constraintBottom_toTopOf="@+id/tx_notes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView_color" />
+
+    <ImageView
+        android:id="@+id/imageView_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/tx_notes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_belt"
+        app:tint="#E11010" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

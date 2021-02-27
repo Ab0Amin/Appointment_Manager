@@ -2,4 +2,29 @@
 
     <string name="app_name">Appointment Manager</string>
     <string name="Month_mode">Month Mode</string>
+<string-array name="Colors" >
+
+    <item>black</item>
+    <item>blue</item>
+    <item>red</item>
+    <item>yellow</item>
+    <item>white</item>
+
+
+
+</string-array>
+<!--    if(color.equals("black"))-->
+<!--    return Color.BLACK;-->
+
+<!--    if(color.equals("blue"))-->
+<!--    return Color.BLUE;-->
+
+<!--    if(color.equals("red"))-->
+<!--    return Color.RED;-->
+
+<!--    if(color.equals("yellow"))-->
+<!--    return Color.YELLOW;-->
+
+
+<!--    return Color.WHITE;-->
 </resources>

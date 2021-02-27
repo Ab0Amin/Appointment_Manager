@@ -18,5 +18,6 @@
         <!-- Customize your theme here. -->
         <item name="statusBarForeground">@color/calendarColor</item>
 
+
     </style>
 </resources>
