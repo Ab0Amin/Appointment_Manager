@@ -41,7 +41,7 @@ public class MyReceiver extends BroadcastReceiver {
         Notification notification = builder.build();
         Random random=new Random();
         notificationManager.notify(id,notification);
-        Toast.makeText(context, id, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, id, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -53,7 +53,7 @@ public class MyReceiver extends BroadcastReceiver {
             CharSequence name = "AppointmentApplication";
             String description = "AppointmentApplication";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("AppointmentApplication"+id, name, importance);
+            NotificationChannel channel = new NotificationChannel("AppointmentApplication", name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this

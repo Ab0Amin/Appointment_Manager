@@ -1,66 +1,39 @@
 package com.example.appointmentmanager;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.ActionMenuItem;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Date;
-
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.PendingIntent;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.view.KeyEvent;
+import android.text.format.DateFormat;
 import android.view.PointerIcon;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.appointmentmanager.decorator.MyReceiver;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
-import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener;
-
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.text.SimpleDateFormat;
-
-import android.text.format.DateFormat;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class AddAppointment extends AppCompatActivity {
 
@@ -213,7 +186,7 @@ public class AddAppointment extends AppCompatActivity {
                 Toast.makeText(this, "Appointment Saved", Toast.LENGTH_SHORT).show();
 
 //                Intent in = new Intent(this, MyReceiver.class);
-//            in.putExtra("id",i+10);
+//          //  in.putExtra("id",i+10);
 //                PendingIntent pe = PendingIntent.getBroadcast(this,0,in,0);
 //                AlarmManager alarmManager=(AlarmManager) getSystemService(ALARM_SERVICE);
 //                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, (SystemClock.elapsedRealtime()+5200),pe);

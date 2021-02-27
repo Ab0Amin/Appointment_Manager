@@ -11,4 +11,7 @@ public interface AppointmentDAO2 {
 
     @Insert
     long insertAppointment(Appointment appointment);
+
+    @Query("SELECT date_time FROM appointments WHERE date_time like :date ORDER BY  date_time")
+    List<String> GetToDayAppointment(String date);
 }

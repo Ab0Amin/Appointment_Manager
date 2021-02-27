@@ -2,29 +2,37 @@
 
     <string name="app_name">Appointment Manager</string>
     <string name="Month_mode">Month Mode</string>
-<string-array name="Colors" >
+    <string-array name="Colors">
 
-    <item>black</item>
-    <item>blue</item>
-    <item>red</item>
-    <item>yellow</item>
-    <item>white</item>
-
-
-
-</string-array>
-<!--    if(color.equals("black"))-->
-<!--    return Color.BLACK;-->
-
-<!--    if(color.equals("blue"))-->
-<!--    return Color.BLUE;-->
-
-<!--    if(color.equals("red"))-->
-<!--    return Color.RED;-->
-
-<!--    if(color.equals("yellow"))-->
-<!--    return Color.YELLOW;-->
+        <item>black</item>
+        <item>blue</item>
+        <item>red</item>
+        <item>yellow</item>
+        <item>white</item>
 
 
-<!--    return Color.WHITE;-->
+    </string-array>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <!--    if(color.equals("black"))-->
+    <!--    return Color.BLACK;-->
+
+    <!--    if(color.equals("blue"))-->
+    <!--    return Color.BLUE;-->
+
+    <!--    if(color.equals("red"))-->
+    <!--    return Color.RED;-->
+
+    <!--    if(color.equals("yellow"))-->
+    <!--    return Color.YELLOW;-->
+
+
+    <!--    return Color.WHITE;-->
 </resources>
