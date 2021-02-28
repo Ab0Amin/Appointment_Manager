@@ -46,6 +46,7 @@ public class ReapetedReciever extends BroadcastReceiver {
         this.context = context;
 
         dates =  Prefrence.getSetStringData("todayDates");
+
          time = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 
 

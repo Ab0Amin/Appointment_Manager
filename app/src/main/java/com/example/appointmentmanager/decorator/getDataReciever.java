@@ -40,7 +40,7 @@ public class getDataReciever extends BroadcastReceiver {
         String date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
         List<String> Tempdates = AppointmentManagerDatabase.getInstance(context).appointmentDAO2().GetToDayAppointment("%" + date + "%");
         for (int i = 0; i < Tempdates.size(); i++) {
-            dates.add(Tempdates.get(i).replace(date, ""));
+            dates.add(Tempdates.get(i).replace(date+"T", ""));
         }
         Prefrence.storeSetData("todayDates",dates);
     }
