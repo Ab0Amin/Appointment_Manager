@@ -166,7 +166,7 @@ public class AddAppointment extends AppCompatActivity {
         });
 
 
-        imageForColor.setColorFilter(Color.BLUE);
+        imageForColor.setColorFilter(Color.RED);
 
         //notifications
 

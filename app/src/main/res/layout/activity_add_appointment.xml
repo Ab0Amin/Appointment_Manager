@@ -117,6 +117,7 @@
         android:layout_height="wrap_content"
         android:onClick="test"
         android:text="Button"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -137,6 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
+        android:backgroundTint="@color/secondaryColor"
         app:layout_constraintBottom_toBottomOf="@+id/tx_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tx_title"
