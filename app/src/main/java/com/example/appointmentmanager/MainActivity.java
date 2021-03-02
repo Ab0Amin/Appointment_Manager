@@ -26,7 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import com.example.appointmentmanager.decorator.DayHasAppointmentsDecorator;
@@ -42,6 +46,8 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 public class MainActivity extends AppCompatActivity implements OnDateSelectedListener, OnMonthChangedListener, CompoundButton.OnCheckedChangeListener {
     int processors = Runtime.getRuntime().availableProcessors();
@@ -284,14 +290,25 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
                 holder = (viewHolder) convertView.getTag();
             }
 
+
+            holder.timeTextView.setText(getTime(getItem(position).date_time.substring(11,16)));
             holder.titleTextView.setText(getItem(position).title);
-            holder.timeTextView.setText(getItem(position).date_time.substring(11));
             holder.beltColorImageView.setColorFilter(getColor(getItem(position).color));
             holder.constraintLayout.setOnClickListener(this);
             holder.constraintLayout.setTag(getItem(position));
             return  convertView;
         }
 
+        //set time format
+        String getTime(String time)
+        {
+            byte h = Byte.parseByte(time.substring(1,2));
+            if(h > 12)
+            {
+                return (h-12) + " PM";
+            }
+            return time + " AM";
+        }
 
         int getColor(String color)
         {

@@ -64,15 +64,17 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="56dp"
         android:background="@drawable/appointment_layout_shape"
         android:backgroundTintMode="add"
         android:clipChildren="true"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/tx_title"
 
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="1.0"
         app:mcv_arrowColor="@color/primaryTextColor"
         app:mcv_calendarMode="month"
         app:mcv_dateTextAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -111,17 +113,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="#FFFFFF" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="test"
-        android:text="Button"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <Spinner
         android:id="@+id/spinner_colors"
         android:layout_width="0dp"
@@ -138,7 +129,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
-        android:backgroundTint="@color/secondaryColor"
         app:layout_constraintBottom_toBottomOf="@+id/tx_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tx_title"

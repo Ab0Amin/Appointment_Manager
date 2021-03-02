@@ -50,7 +50,6 @@ public class ReapetedReciever extends BroadcastReceiver {
          time = LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
 
 
-
         LocalTime ConvertedTime = LocalTime.parse(time, DateTimeFormatter.ISO_LOCAL_TIME);
          calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
