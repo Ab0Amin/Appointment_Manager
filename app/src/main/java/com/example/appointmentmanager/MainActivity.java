@@ -302,10 +302,17 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         //set time format
         String getTime(String time)
         {
-            byte h = Byte.parseByte(time.substring(1,2));
+
+
+            byte h = Byte.parseByte(time.substring(0,2));
             if(h > 12)
             {
-                return (h-12) + " PM";
+                h -=12;
+
+                if(h <= 9)
+                    return  "0"+ h + time.substring(2) + " PM";
+                else
+                    return  h + time.substring(2) + " PM";
             }
             return time + " AM";
         }
