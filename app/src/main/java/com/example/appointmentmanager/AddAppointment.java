@@ -33,7 +33,9 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AddAppointment extends AppCompatActivity {
 
@@ -55,13 +57,13 @@ public class AddAppointment extends AppCompatActivity {
     Thread TimePickerThead;
     DateTimeFormatter formatter;
     LocalDate OpenDate;
-
+    MyPrefernce Prefrence;
 
     //variables
     int year;
     int month;
     int day;
-    String dateString, selectedColor, recievedDate;
+    String dateString,CurrentDate, selectedColor, recievedDate,time_forDatabase;
     Date selectedTime;
     //datastructure
     List<String> AllSelecteDates;
@@ -176,28 +178,34 @@ public class AddAppointment extends AppCompatActivity {
         if (AllSelecteDates.size() > 0 && !title.getText().toString().isEmpty() && !time.getText().toString().isEmpty()) {
             for (int i = 0; i < AllSelecteDates.size(); i++) {
                 date_forDatabase = LocalTime.of(selectedTime.getHours(), selectedTime.getMinutes());
+                time_forDatabase = date_forDatabase.getHour()+":"+date_forDatabase.getMinute();
                  formatter = DateTimeFormatter.ISO_LOCAL_TIME;
                 newAppointment.color = selectedColor;
                 newAppointment.note = note.getText().toString();
                 newAppointment.title = title.getText().toString();
-//                String time2 = time.getText().toString();
                 newAppointment.date_time = AllSelecteDates.get(i) + "T" + date_forDatabase.format(formatter);
                 AppointmentManagerDatabase.getInstance(this).appointmentDAO2().insertAppointment(newAppointment);
                 Toast.makeText(this, "Appointment Saved", Toast.LENGTH_SHORT).show();
 
-//                Intent in = new Intent(this, MyReceiver.class);
-//          //  in.putExtra("id",i+10);
-//                PendingIntent pe = PendingIntent.getBroadcast(this,0,in,0);
-//                AlarmManager alarmManager=(AlarmManager) getSystemService(ALARM_SERVICE);
-//                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, (SystemClock.elapsedRealtime()+5200),pe);
+                 CurrentDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+                 Prefrence = MyPrefernce.getInstance(this);
 
+                 {
+                    if (AllSelecteDates.get(i).equals(CurrentDate)) {
+                        Set<String> modifyToDaydates = new HashSet<>();
+                        modifyToDaydates=   Prefrence.getSetStringData("todayDates");
 
+                        List<String> Tempdates = AppointmentManagerDatabase.getInstance(AddAppointment.this).appointmentDAO2().GetToDayAppointment("%" + CurrentDate + "%");
+                        for (int i2 = 0; i2 < Tempdates.size(); i2++) {
+                            modifyToDaydates.add(Tempdates.get(i2).replace(CurrentDate+"T", ""));
+                        }
+
+                        Prefrence.storeSetData("todayDates",modifyToDaydates);
+                    }
+                }
             }
             onBackPressed();
-
         } else Toast.makeText(this, "Please enter a valid data", Toast.LENGTH_LONG).show();
-
-
     }
 
 
@@ -262,8 +270,7 @@ public class AddAppointment extends AppCompatActivity {
     public void test(View view) {
        PointerIcon m= calenderForDates.getPointerIcon();
         calenderForDates.postInvalidateOnAnimation();
-//        calenderForDates.get
-//        selectedTime
+
         Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
 
     }
