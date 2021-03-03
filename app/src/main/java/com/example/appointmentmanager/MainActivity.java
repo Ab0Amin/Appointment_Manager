@@ -33,6 +33,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 import com.example.appointmentmanager.decorator.DayHasAppointmentsDecorator;
 import com.example.appointmentmanager.decorator.TodayDecorator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -64,8 +68,9 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
     AppointmentDAO appointmentDAO;
     DayHasAppointmentsDecorator DHAdecorator;
 
-    TextView selectedDayNumTextView,selectedDayInWeekTextView,selectedCountTextView;
-
+    TextView selectedDayNumTextView, selectedDayInWeekTextView, selectedCountTextView;
+    String mail, password;
+    MyPrefernce Prefrence;
 
 
     @SuppressLint("SetTextI18n")
@@ -73,6 +78,30 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        login.log = this;
+        Prefrence = MyPrefernce.getInstance(this);
+        password = Prefrence.getStringData("pass");
+        mail = Prefrence.getStringData("nameMail");
+        Backendless.initApp(this, "A45DF29A-4407-DF76-FF5C-8F3DC042CA00", "07C2241D-B448-47B2-A2E4-913F2B05FFF3");
+
+        Backendless.UserService.login(mail, password, new AsyncCallback<BackendlessUser>() {
+            @Override
+            public void handleResponse(BackendlessUser response) {
+                Toast.makeText(MainActivity.this, "Welcome back", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Intent intent = new Intent(MainActivity.this, login.class);
+                startActivity(intent);
+
+            }
+        }, true);
+
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         appointmentDAO = AppointmentManagerDatabase.getInstance(this).appointmentDAO();
         //views
@@ -108,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         //calendar.setTopbarVisible(false);
 
         //new string here
-        selectedDayNumTextView.setText(""+today.getDayOfMonth());
+        selectedDayNumTextView.setText("" + today.getDayOfMonth());
         selectedDayInWeekTextView.setText(calendar.getSelectedDate().getDate().getDayOfWeek().toString());
 
 
@@ -116,9 +145,8 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         pool.execute(() -> {
             appointments = appointmentDAO.selectedDayAppointments(today.toString()); //TODO it may take time
             selectedCountTextView.setText(appointments.size() + " Appointments due");
-            if (appointments.size() != 0)
-            {
-                adapter = new AppointmentsAdapter(MainActivity.this,appointments);
+            if (appointments.size() != 0) {
+                adapter = new AppointmentsAdapter(MainActivity.this, appointments);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -141,8 +169,8 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
 
     public void moveToAddAppointment(View view) {
 
-        Intent intent = new Intent(this,AddAppointment.class); // move to add page
-        intent.putExtra("selectedDate",calendar.getSelectedDate()); // passing calendar selected date
+        Intent intent = new Intent(this, AddAppointment.class); // move to add page
+        intent.putExtra("selectedDate", calendar.getSelectedDate()); // passing calendar selected date
         startActivity(intent); // start activity
     }
 
@@ -152,11 +180,11 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
 
         //don't do any thing if same day has selected
-        if(date == previousDaySelected)
+        if (date == previousDaySelected)
             return;
 
         //setting date on the top left of list view
-        selectedDayNumTextView.setText(""+date.getDate().getDayOfMonth()); //month day
+        selectedDayNumTextView.setText("" + date.getDate().getDayOfMonth()); //month day
         selectedDayInWeekTextView.setText(calendar.getSelectedDate().getDate().getDayOfWeek().toString()); //week day
 
 
@@ -169,16 +197,14 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         pool.execute(new Runnable() {
             @Override
             public void run() {
-                if(adapter == null)
-                {
+                if (adapter == null) {
                     appointments = appointmentDAO.selectedDayAppointments(date.getDate().toString()); //TODO it may take time
 
-                    if(appointments.size() == 0)
-                    {
+                    if (appointments.size() == 0) {
                         appointments = null;
                         return;
                     }
-                    adapter = new AppointmentsAdapter(MainActivity.this,appointments);
+                    adapter = new AppointmentsAdapter(MainActivity.this, appointments);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -221,8 +247,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
     private void getDaysHasAppointments(CalendarDay date) {
 
         // clean  decorator object and clear screen
-        if(DHAdecorator != null)
-        {
+        if (DHAdecorator != null) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -258,20 +283,22 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         TransitionManager.beginDelayedTransition(parentLayout);
 
         // change CalendarMode depends on the current mode
-        if(calendar.getCalendarMode() == CalendarMode.WEEKS)
+        if (calendar.getCalendarMode() == CalendarMode.WEEKS)
             calendar.state().edit().setCalendarDisplayMode(CalendarMode.MONTHS).commit();
         else
             calendar.state().edit().setCalendarDisplayMode(CalendarMode.WEEKS).commit();
     }
 
     public void moveToSettingsImageView(View view) {
-        Intent intent = new Intent(this,SettingsActivity.class); // move to add page
+        Intent intent = new Intent(this, SettingsActivity.class); // move to add page
         startActivity(intent); // start activity
     }
 
 
     class AppointmentsAdapter extends ArrayAdapter<Appointment> implements View.OnClickListener {
-        public AppointmentsAdapter(@NonNull Context context,List<Appointment> appointment ) { super(context, 0,appointment); }
+        public AppointmentsAdapter(@NonNull Context context, List<Appointment> appointment) {
+            super(context, 0, appointment);
+        }
 
 
         @NonNull
@@ -280,62 +307,57 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
             viewHolder holder;
 
             // we made this if .. to reuse convertView and viewHolder
-            if(convertView == null)
-            {
-                convertView = getLayoutInflater().inflate(R.layout.appointment_layout,parent,false);
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.appointment_layout, parent, false);
                 holder = new viewHolder(convertView);
                 convertView.setTag(holder);
-            }else
-            {
+            } else {
                 holder = (viewHolder) convertView.getTag();
             }
 
 
-            holder.timeTextView.setText(getTime(getItem(position).date_time.substring(11,16)));
+            holder.timeTextView.setText(getTime(getItem(position).date_time.substring(11, 16)));
             holder.titleTextView.setText(getItem(position).title);
             holder.beltColorImageView.setColorFilter(getColor(getItem(position).color));
             holder.constraintLayout.setOnClickListener(this);
             holder.constraintLayout.setTag(getItem(position));
-            return  convertView;
+            return convertView;
         }
 
         //set time format
-        String getTime(String time)
-        {
+        String getTime(String time) {
 
 
-            byte h = Byte.parseByte(time.substring(0,2));
-            if(h > 12)
-            {
-                h -=12;
+            byte h = Byte.parseByte(time.substring(0, 2));
+            if (h > 12) {
+                h -= 12;
 
-                if(h <= 9)
-                    return  "0"+ h + time.substring(2) + " PM";
+                if (h <= 9)
+                    return "0" + h + time.substring(2) + " PM";
                 else
-                    return  h + time.substring(2) + " PM";
+                    return h + time.substring(2) + " PM";
             }
             return time + " AM";
         }
 
-        int getColor(String color)
-        {
+        int getColor(String color) {
             /*
             getting color id from drawable
              */
-            if(color.equals("black"))
+            if (color.equals("black"))
                 return Color.BLACK;
 
-            if(color.equals("blue"))
+            if (color.equals("blue"))
                 return Color.BLUE;
 
-            if(color.equals("red"))
+            if (color.equals("red"))
                 return Color.RED;
 
-            if(color.equals("yellow"))
+            if (color.equals("yellow"))
                 return Color.YELLOW;
 
 
-        return Color.WHITE;
+            return Color.WHITE;
 
         }
 
@@ -343,23 +365,24 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
         public void onClick(View view) {
             Appointment a = (Appointment) view.getTag();
 
-            Intent intent = new Intent(MainActivity.this,AppointmentPage.class); // move to add page
-            intent.putExtra("title",a.title);
-            intent.putExtra("note",a.note);
-            intent.putExtra("color",getColor(a.color));
-            intent.putExtra("date",a.date_time);
-            intent.putExtra("id",a.id);
+            Intent intent = new Intent(MainActivity.this, AppointmentPage.class); // move to add page
+            intent.putExtra("title", a.title);
+            intent.putExtra("note", a.note);
+            intent.putExtra("color", getColor(a.color));
+            intent.putExtra("date", a.date_time);
+            intent.putExtra("id", a.id);
             startActivity(intent); // start activity
 
         }
     }
+
     static class viewHolder {
-        TextView timeTextView,titleTextView;
+        TextView timeTextView, titleTextView;
         ImageView beltColorImageView;
         ConstraintLayout constraintLayout;
+
         //TimelineView timelineView;
-        public  viewHolder (View convertView)
-        {
+        public viewHolder(View convertView) {
             //to stop sound and effect
             convertView.setOnClickListener(null);
             convertView.setSoundEffectsEnabled(false);
@@ -369,10 +392,6 @@ public class MainActivity extends AppCompatActivity implements OnDateSelectedLis
             titleTextView = convertView.findViewById(R.id.titleTextView);
             beltColorImageView = convertView.findViewById(R.id.beltColorImageView);
             constraintLayout = convertView.findViewById(R.id.constraintLayout); //TODO onclick
-
-
-
-
 
 
         }

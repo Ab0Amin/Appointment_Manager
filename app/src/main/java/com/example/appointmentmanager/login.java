@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -33,6 +34,14 @@ public class login extends AppCompatActivity {
     PendingIntent pe24, pe5;
     AlarmManager alarmManager24, alarmManager5;
     String mail, password;
+   static MainActivity log ;
+
+
+
+    @Override
+    public void onBackPressed() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,23 +56,7 @@ public class login extends AppCompatActivity {
 
         Prefrence = MyPrefernce.getInstance(this);
         woirking = Prefrence.getStringData("receiver");
-       mail=  Prefrence.getStringData("nameMail");
-       password= Prefrence.getStringData("pass");
-        Backendless.initApp(this, "A45DF29A-4407-DF76-FF5C-8F3DC042CA00", "07C2241D-B448-47B2-A2E4-913F2B05FFF3");
 
-        Backendless.UserService.login(mail, password, new AsyncCallback<BackendlessUser>() {
-            @Override
-            public void handleResponse(BackendlessUser response) {
-                Intent intent = new Intent(login.this, MainActivity.class);
-                startActivity(intent);
-                Toast.makeText(login.this, "Welcome back", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-            }
-        });
 
 
         if (!woirking.equals("true")) {
@@ -83,6 +76,7 @@ public class login extends AppCompatActivity {
             });
             thread.start();
         }
+
 
     }
 
@@ -106,11 +100,9 @@ public class login extends AppCompatActivity {
                 public void handleFault(BackendlessFault fault) {
                     Toast.makeText(login.this, "user does't exist", Toast.LENGTH_SHORT).show();
                 }
-            });
+            },true);
         }
         else Toast.makeText(this, "Please inter valid data", Toast.LENGTH_SHORT).show();
-
-
 
     }
 
